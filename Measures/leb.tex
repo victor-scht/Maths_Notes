@@ -1,0 +1,288 @@
+\section{Lebesgue Measure}
+
+There are several ways to define the Lebesgue measure, denoted by $\lambda$.
+We propose a construction based on outer measures for the one–dimensional case.
+In a first part, we construct the measure on $\mathbb{R}$ and then extend the
+result to the multidimensional case using the classical outer measure definition.
+
+There is a more natural way to extend the result to higher dimensions using
+product measures. However, the approach presented here provides an opportunity
+to examine some proofs that are rarely discussed when dealing directly with
+multidimensional constructions.
+
+\subsection{The one–dimensional case}
+
+\defn Let us define
+\[
+	\lambda^*(A) =
+	\inf\left\{
+	\sum_{n=0}^{+\infty} (b_n-a_n)
+	\ :\
+	A \subset \bigcup_{n=0}^{+\infty} ]a_n,b_n[
+	\right\}
+\]
+for any $A \subset \mathbb{R}$.
+
+\prop The following properties hold:
+\begin{enumerate}
+	\item $\lambda^*$ is an outer measure.
+
+	\item $\mathcal{B}(\mathbb{R}) \subset \mathcal{M}(\lambda^*)$.
+
+	\item $\lambda^*(]a,b[)=b-a$.
+\end{enumerate}
+
+\rem Although the definition of $\lambda^*$ is given in terms
+of countable coverings, we may of course also use finite coverings when
+convenient.
+
+Indeed, if a set $A$ is covered by finitely many intervals
+\[
+	A \subset \bigcup_{n=0}^N ]a_n,b_n[,
+\]
+then for any $\varepsilon>0$ we can complete this family into a countable
+covering by adding intervals of arbitrarily small total length, for instance
+$]0,\varepsilon 2^{-n}[$ for $n\ge N+1$. In this way we obtain a countable
+covering of $A$ whose total length is
+\[
+	\sum_{n=0}^N (b_n-a_n) + \sum_{n=N+1}^{+\infty} \varepsilon 2^{-n}
+	\le
+	\sum_{n=0}^N (b_n-a_n)+\varepsilon.
+\]
+
+Since $\varepsilon>0$ is arbitrary, any estimate obtained from a finite
+covering may be used in the definition of $\lambda^*$.
+
+\begin{proof}
+	Let $A$ be a subset of $\mathbb{R}$.
+
+	\emph{(1)} Let us show that $\lambda^*$ is an outer measure.
+	First, let us notice that $\lambda^*(\varnothing)=0$. Indeed,
+	\[
+	\varnothing \subset ]0,\varepsilon [.
+		\]
+		So,
+		\[
+			\lambda^*(\varnothing) \le \varepsilon.
+		\]
+		It is then clear that $\lambda^*(\varnothing) = 0$.
+		Next, by basic properties of the infimum, if $A \subset B$ then
+		\[
+			\lambda^*(A)\le \lambda^*(B).
+		\]
+		It remains to prove countable subadditivity.
+		Let $(A_n)_{n\in\mathbb{N}}$ be a sequence of subsets of $\mathbb{R}$.
+		If
+		\[
+			\sum_{n=0}^{+\infty}\lambda^*(A_n)=+\infty,
+		\]
+		then clearly
+		\[
+			\lambda^*\!\left(\bigcup_{n=0}^{+\infty}A_n\right)
+			\le
+			\sum_{n=0}^{+\infty}\lambda^*(A_n).
+		\]
+		Assume now that the series is finite, so that
+		$\lambda^*(A_n)<+\infty$ for every $n$.
+		Fix $\varepsilon>0$.
+		For each $n\in\mathbb{N}$ there exists a sequence of intervals
+		$]a_{i,n},b_{i,n}[$ covering $A_n$ such that
+		\[
+			\sum_{i=0}^{+\infty}(b_{i,n}-a_{i,n})
+			\le
+			\lambda^*(A_n)+\varepsilon 2^{-n}.
+		\]
+		The family of intervals $(]a_{i,n},b_{i,n}[)_{i,n\in\mathbb{N}}$
+		covers $\displaystyle\bigcup_{n=0}^{+\infty}A_n$.
+		Therefore
+		\[
+			\lambda^*\!\left(\bigcup_{n=0}^{+\infty}A_n\right)
+			\le
+			\sum_{n=0}^{+\infty}\sum_{i=0}^{+\infty}(b_{i,n}-a_{i,n})
+			\le
+			\sum_{n=0}^{+\infty}\lambda^*(A_n)+\varepsilon.
+		\]
+		Since $\varepsilon>0$ is arbitrary, we obtain
+		\[
+			\lambda^*\!\left(\bigcup_{n=0}^{+\infty}A_n\right)
+			\le
+			\sum_{n=0}^{+\infty}\lambda^*(A_n).
+		\]
+		This proves countable subadditivity and therefore $\lambda^*$ is an outer measure.
+
+		\medskip
+
+		\emph{(2)} Let us show that $\mathcal{B}(\mathbb{R}) \subset \mathcal{M}(\lambda^*)$. Recall that $\mathcal{B}(\mathbb{R})=\sigma(]-\infty,a]\,:\,a\in\mathbb{R})$.
+		It is therefore sufficient to show that every interval of the form
+	$]-\infty,a]$ is $\aM(\lambda^*)$–measurable.
+		Let $a\in\mathbb{R}$ and let $(]a_n,b_n[)_{n\in\mathbb{N}}$ be a countable
+		family of intervals covering a set $A\subset\mathbb{R}$.
+		Then we may decompose the sum of their lengths as
+		\begin{align}
+			\sum_{n=0}^{+\infty}(b_n-a_n)
+			 & =
+			\sum_{\substack{n\ge0 \\ b_n\le a}}(b_n-a_n)
+			+
+			\sum_{\substack{n\ge0 \\ a_n<a<b_n}}(b_n-a_n)
+			+
+			\sum_{\substack{n\ge0 \\ a\le a_n}}(b_n-a_n).
+		\end{align}
+		Let $\varepsilon>0$ and define
+		\[
+			c_n=a-\varepsilon2^{-n}, \qquad d_n=a+\varepsilon2^{-n}.
+		\]
+		Then
+		\[
+			4\varepsilon
+			+
+			\sum_{\substack{n\ge0 \\ a_n<a<b_n}}(b_n-a_n)
+			\ge
+			\sum_{\substack{n\ge0 \\ a_n<a<b_n}}(b_n-c_n)
+			+
+			\sum_{\substack{n\ge0 \\ a_n<a<b_n}}(d_n-a_n).
+		\]
+		Combining these inequalities yields
+		\[
+			4\varepsilon
+			+
+			\sum_{n=0}^{+\infty}(b_n-a_n)
+			\ge
+			\lambda^*(A\cap]-\infty,a])
+			+
+			\lambda^*(A\cap]a,+\infty[).
+		\]
+		Taking the infimum over all coverings of $A$ gives
+		\[
+			4\varepsilon+\lambda^*(A)
+			\ge
+			\lambda^*(A\cap]-\infty,a])
+			+
+			\lambda^*(A\cap]a,+\infty[).
+		\]
+		Since $\varepsilon>0$ is arbitrary, we obtain
+		\[
+			\lambda^*(A)
+			\ge
+			\lambda^*(A\cap]-\infty,a])
+			+
+			\lambda^*(A\cap]a,+\infty[).
+		\]
+		Hence $]-\infty,a]$ is $\aM(\lambda^*)$–measurable. Since the Borel
+	$\sigma$–algebra is generated by such intervals, we conclude that
+		\[
+			\mathcal{B}(\mathbb{R})\subset\mathcal{M}(\lambda^*).
+		\]
+
+		\medskip
+
+		\emph{(3)} Let us prove that $\lambda^*(]a,b[]) = b-a$.
+		The interval $]a,b[$ itself covers $]a,b[$, then
+		\[
+			\lambda^*(]a,b[)\le b-a.
+		\]
+		To prove the other inequality, choose $a<c<d<b$. We have
+		\[
+			\lambda^*([c,d])\le \lambda^*(]a,b[).
+		\]
+		Let $(]a_n,b_n[))_{n\in\mathbb{N}}$ be a covering of $]a,b[$. Then it is also a covering of $[c,d]$, which is compact. Hence there exists $N\in\mathbb{N}$ such that the finite family $(]a_n,b_n[))_{0\le n\le N}$ covers $[c,d]$.
+		Now let us denote
+		\[
+			D_m=\left\{L_k^m=[k2^{-m},(k+1)2^{-m}[\,:\,k\in\mathbb{Z}\right\}.
+		\]
+		Note that $|L_k^m|$ denotes the length of the interval $L_k^m$, hence
+	$|L_k^m|=2^{-m}$.
+		For any $n\in\{0,\dots,N\}$, let $A_{n,m}$ be the set of indices $k$
+		such that
+		\[
+			L_k^m\cap ]a_n,b_n[\neq\varnothing .
+		\]
+		Observe that the intervals $(L_k^m)_{k\in A_{n,m}}$ are contiguous.
+		Indeed, since $]a_n,b_n[$ is an interval, if $L_{k_1}^m$ and
+	$L_{k_2}^m$ intersect $]a_n,b_n[$ with $k_1<k_2$, then every
+	$L_k^m$ with $k_1\le k\le k_2$ also intersects $]a_n,b_n[$.
+		Thus the union of these intervals is itself an interval.
+		Moreover,
+		\[
+			]a_n,b_n[
+			\subset
+			\bigcup_{k\in A_{n,m}} L_k^m .
+		\]
+		This union may extend slightly outside $]a_n,b_n[$ near the two
+		endpoints $a_n$ and $b_n$. At most two dyadic intervals may cross these
+		boundary points, and each has length $2^{-m}$. Therefore
+		\[
+			\sum_{k\in A_{n,m}} |L_k^m|
+			\le
+			(b_n-a_n)+2\cdot 2^{-m}.
+		\]
+		Rearranging gives
+		\[
+			b_n-a_n
+			\ge
+			\sum_{k\in A_{n,m}} |L_k^m| - 2\cdot 2^{-m}.
+		\]
+		Summing over $n=0,\dots,N$ yields
+		\[
+			\sum_{n=0}^{N}(b_n-a_n)
+			\ge
+			\sum_{n=0}^{N}\sum_{k\in A_{n,m}} |L_k^m| - N2^{-m+1}.
+		\]
+		It is clear that the chosen intervals $L_k^m$ cover the union of the
+		intervals $]a_n,b_n[$, hence they also cover $[c,d]$.
+		Let us denote by $B_m$ the set of indices $k$ corresponding to the chosen
+		intervals $L_k^m$. Then
+		\[
+			[c,d] \subset \bigcup_{k\in B_m} L_k^m
+			= \bigcup_{n=0}^{N} \bigcup_{k \in A_{n,m}} L_k^m .
+		\]
+		From this family we can extract a subset $C_m\subset B_m$ such that the
+		intervals $(L_k^m)_{k\in C_m}$ are contiguous and still cover $[c,d]$.
+		Since $|L_k^m|$ denotes the length of $L_k^m$, and the intervals
+	$(L_k^m)_{k\in C_m}$ form a contiguous family covering $[c,d]$, we have
+		\[
+			\sum_{k\in C_m} |L_k^m| \ge d-c.
+		\]
+		Moreover,
+		\[
+			\sum_{n=0}^{N}\sum_{k\in A_{n,m}} |L_k^m|
+			\ge
+			\sum_{k\in B_m} |L_k^m|
+			\ge
+			\sum_{k\in C_m} |L_k^m|.
+		\]
+		Therefore
+		\[
+			\sum_{n=0}^{N}\sum_{k\in A_{n,m}} |L_k^m|
+			\ge d-c.
+		\]
+		Combining the previous inequalities, we obtain
+		\[
+			\sum_{n=0}^{N}(b_n-a_n)\ge d-c-N2^{-m+1}.
+		\]
+		Letting $m\to+\infty$, we get
+		\[
+			\sum_{n=0}^{N}(b_n-a_n)\ge d-c.
+		\]
+		Since
+		\[
+			\sum_{n=0}^{+\infty}(b_n-a_n)\ge \sum_{n=0}^{N}(b_n-a_n),
+		\]
+		it follows that every covering $(]a_n,b_n[)_{n\in\mathbb{N}}$ of $]a,b[$ satisfies
+		\[
+			\sum_{n=0}^{+\infty}(b_n-a_n)\ge d-c.
+		\]
+		Taking the infimum over all such coverings yields
+		\[
+			\lambda^*(]a,b[)\ge d-c.
+		\]
+		Since this holds for every $a<c<d<b$, we conclude by letting $c\to a$ and $d\to b$ that
+	\[
+		\lambda^*(]a,b[)\ge b-a.
+	\]
+	Together with the reverse inequality, this proves that
+	\[
+		\lambda^*(]a,b[)=b-a.
+	\]
+\end{proof}
+
+\subsection{The multidimensional case}

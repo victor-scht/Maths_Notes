@@ -1,0 +1,401 @@
+\documentclass[11pt]{report}
+% \documentclass[12pt]{amsart}
+% \documentclass[12pt]{amsproc}
+% \documentclass[12pt]{amsbook}
+
+\usepackage{amssymb,amscd,amsthm, verbatim,amsmath,color,fancyhdr, mathrsfs}
+\usepackage{graphicx}
+\usepackage{turnstile}
+\usepackage[hidelinks]{hyperref}
+
+\def\tequiv{\ensuremath\sdststile{}{}}
+
+\usepackage[letterpaper, left=2cm, right=2cm, top=2.5cm,
+bottom=2.5cm,dvips]{geometry}
+
+\setcounter{section}{1}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{exr}[thm]{Exercise}
+\newtheorem{ex}[thm]{Example}
+\newtheorem{defn}[thm]{Definition}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\aB}{\mathcal{B}}
+\newcommand{\aM}{\mathcal{M}}
+
+\title{Measure and Probability theory}
+
+\author{Victor Schmit}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\chapter{Measures}
+
+\input{leb}
+
+\section{Stieljes Integral}
+\label{sec:stieljes}
+
+\section{Bounded Variation}
+
+\defn[Total Variation]
+Let $a : [0, T] \to \R$ be a function. For any $t \in [0,T]$, the \emph{total variation}
+of $a$ on $[0,t]$ is defined by
+\[
+	V(t) =
+	\sup \left\{
+	\sum_{i=0}^{n}
+	|a(t_{i+1}) - a(t_i)|
+	\; : \;
+	0 = t_0 < t_1 < \dots < t_{n+1} = t
+	\right\}.
+\]
+
+\defn[Bounded Variation]
+Let $a : [0, T] \to \R$ be a continuous function such that $a(0)=0$.
+We say that $a$ is of \emph{bounded variation} on $[0,T]$ if
+\[
+	V(T) < +\infty .
+\]
+
+\thm
+\label{thm:bound-stiel}
+Let $a : [0,T] \to \R$ be continuous with $a(0)=0$.
+Then $a$ is of bounded variation if and only if there exists a finite signed
+measure $\mu$ on $[0,T]$ such that
+\[
+	a(t) = \mu([0,t]), \qquad t \in [0,T].
+\]
+In this case the total variation $V(T)$ coincides with the total variation of the
+measure $\mu$.
+
+\rem
+This theorem is important because it allows us to interpret a function of bounded
+variation as the cumulative mass of a signed measure. In other words, the
+increments of the function correspond to the mass assigned by the measure:
+\[
+	a(t) - a(s) = \mu((s,t]).
+\]
+
+This provides a natural way to define integrals with respect to $a$.
+If $f$ is a suitable function (for instance continuous), we define
+\[
+	\int_0^T f(t)\, da(t)
+	:= \int_{[0,T]} f(t)\, \mu(dt).
+\]
+
+\rem
+The integral with respect to a function of bounded variation can also be
+defined as the limit of Riemann--Stieltjes sums.
+
+Let
+\[
+	0 = t_0 < t_1 < \dots < t_n = T
+\]
+be a partition of $[0,T]$, and denote its mesh by
+\[
+	\max_{0 \le i \le n-1} (t_{i+1}-t_i).
+\]
+
+If $f$ is continuous and $a$ is of bounded variation, we define
+\[
+	\int_0^T f(t)\, da(t)
+	=
+	\lim_{\max (t_{i+1}-t_i) \to 0}
+	\sum_{i=0}^{n-1}
+	f(t_i)\big(a(t_{i+1})-a(t_i)\big).
+\]
+
+The bounded variation property ensures that the total size of the increments
+\[
+	\sum_{i=0}^{n-1} |a(t_{i+1})-a(t_i)|
+\]
+remains bounded. This prevents the Riemann sums from oscillating wildly and
+ensures that the limit defining the integral exists.
+
+To prove Theorem \ref{thm:bound-stiel}, we rely on several lemmas and
+properties of the total variation function $V$.
+
+\prop
+Let $a : [0,T] \to \mathbb{R}$ and let $V$ denote its total variation
+function.
+
+\begin{enumerate}
+
+	\item The function $V$ is non-decreasing and non-negative.
+	\item For every $0 \le s < t \le T$,
+	      \[
+		      V(t) - V(s)
+		      =
+		      \sup \left\{
+		      \sum_{i=0}^{n}
+		      |a(t_{i+1}) - a(t_i)|
+		      \ : \
+		      s = t_0 < t_1 < \dots < t_{n+1} = t
+		      \right\}.
+	      \]
+
+	      In other words, $V(t)-V(s)$ is the total variation of $a$ over the
+	      interval $[s,t]$. We denote the total variation of $a$ over the interval
+	      $[s,t]$ by $V_a(s,t)$.
+
+	\item The function $V$ is continuous on $[0,T]$.
+\end{enumerate}
+
+\begin{proof}
+	Let $a:[0,T]\to\R$ be a continuous function.
+
+	\emph{(1)} We do not prove this point as it is very clear that $V$ is non-decreasing and non-negative.
+
+	\medskip
+
+	\emph{(2)} $V(t)-V(s)$ equals the variation of $a$ on $[s,t]$.
+	Fix $0\le s < t\le T$ and define the variation of $a$ on $[s,t]$ by
+	\[
+		V_a(s,t)
+		:=
+		\sup\left\{
+		\sum_{j=0}^{m-1}\bigl|a(x_{j+1})-a(x_j)\bigr|
+		:\;
+		s=x_0<\cdots<x_m=t
+		\right\}.
+	\]
+	We prove that $V(t)-V(s)=V_a(s,t)$.
+
+	\medskip
+
+	\emph{Step 1: $V(t)-V(s)\ge V_a(s,t)$.}
+	Let $\varepsilon>0$ and let $s=x_0<\cdots<x_m=t$ be an arbitrary partition of $[s,t]$.
+	By definition of $V(s)$, there exists a partition $0=u_0<\cdots<u_n=s$ of $[0,s]$
+	such that
+	\[
+		V(s)\le \sum_{i=0}^{n-1}\bigl|a(u_{i+1})-a(u_i)\bigr|+\varepsilon.
+	\]
+	Concatenate the two partitions to obtain a partition of $[0,t]$:
+	\[
+		0=u_0<\cdots<u_n=s=x_0<\cdots<x_m=t.
+	\]
+	Therefore, by definition of $V(t)$,
+	\[
+		V(t)\ge
+		\sum_{i=0}^{n-1}\bigl|a(u_{i+1})-a(u_i)\bigr|
+		+
+		\sum_{j=0}^{m-1}\bigl|a(x_{j+1})-a(x_j)\bigr|.
+	\]
+	Subtracting the previous inequality for $V(s)$ yields
+	\[
+		V(t)-V(s)\ge
+		\sum_{j=0}^{m-1}\bigl|a(x_{j+1})-a(x_j)\bigr|-\varepsilon.
+	\]
+	Since the partition of $[s,t]$ was arbitrary, taking the supremum over all such
+	partitions gives
+	\[
+		V(t)-V(s)\ge V_a(s,t)-\varepsilon.
+	\]
+	Letting $\varepsilon\downarrow0$ we obtain $V(t)-V(s)\ge V_a(s,t)$.
+
+	\medskip
+
+	\emph{Step 2: $V(t)-V(s)\le V_a(s,t)$.}
+	Let $\varepsilon>0$. By definition of $V(t)$, there exists a partition
+	$0=t_0<\cdots<t_N=t$ of $[0,t]$ such that
+	\[
+		V(t)\le \sum_{k=0}^{N-1}\bigl|a(t_{k+1})-a(t_k)\bigr|+\varepsilon.
+	\]
+	Insert the point $s$ into this partition (if it is not already present), obtaining
+	a refined partition $0=r_0<\cdots<r_M=t$ with $s=r_\ell$ for some $\ell$.
+	Refinement can only increase the sum of increments, hence
+	\[
+		\sum_{k=0}^{N-1}\bigl|a(t_{k+1})-a(t_k)\bigr|
+		\le
+		\sum_{j=0}^{M-1}\bigl|a(r_{j+1})-a(r_j)\bigr|.
+	\]
+	Consequently,
+	\[
+		V(t)\le \sum_{j=0}^{M-1}\bigl|a(r_{j+1})-a(r_j)\bigr|+\varepsilon.
+	\]
+	Split the latter sum at $s=r_\ell$:
+	\[
+		\sum_{j=0}^{M-1}\bigl|a(r_{j+1})-a(r_j)\bigr|
+		=
+		\sum_{j=0}^{\ell-1}\bigl|a(r_{j+1})-a(r_j)\bigr|
+		+
+		\sum_{j=\ell}^{M-1}\bigl|a(r_{j+1})-a(r_j)\bigr|.
+	\]
+	The first sum is bounded by $V(s)$, and the second sum is bounded by $V_a(s,t)$.
+	Therefore,
+	\[
+		V(t)\le V(s)+V_a(s,t)+\varepsilon,
+	\]
+	hence
+	\[
+		V(t)-V(s)\le V_a(s,t)+\varepsilon.
+	\]
+	Letting $\varepsilon\downarrow0$ gives $V(t)-V(s)\le V_a(s,t)$.
+	Combining Steps 1 and 2 yields $V(t)-V(s)=V_a(s,t)$.
+
+	\medskip
+
+	\emph{(3)} $V$ is continuous. Let $0 \le s < t \le T$. Since $V$ is non–decreasing, the right limit
+	\[
+		V(s^+) := \lim_{u \downarrow s} V(u)
+	\]
+	and the left limit
+	\[
+		V(t^-) := \lim_{u \uparrow t} V(u)
+	\]
+	exist.
+	Moreover,
+	\[
+		V(s) \le V(s^+) \le V(t^-) \le V(t).
+	\]
+	In particular,
+	\[
+		V(t^-) - V(s^+) \le V(t) - V(s).
+	\]
+	If we prove the reverse inequality, we obtain
+	\[
+		V(t)-V(s)=V(t^-)-V(s^+).
+	\]
+	Since $V(s)\le V(s^+)\le V(t^-)\le V(t)$, this would imply
+	\[
+		V(s^+)=V(s) \quad \text{and} \quad V(t^-)=V(t),
+	\]
+	hence $V$ would be continuous.
+	We now prove the reverse inequality.
+	Let $\varepsilon>0$ and let
+	\[
+		s=x_0 < x_1 < \dots < x_n=t
+	\]
+	be a partition of $[s,t]$.
+	Since $a$ is continuous on $t$ and $s$, there exists $\delta>0$ such that
+	\[
+		|t-u|<\delta \quad \Longrightarrow \quad |a(t)-a(u)|<\varepsilon
+		\quad \text{ and }\quad
+		|s-v|<\delta \quad \Longrightarrow \quad |a(s)-a(v)|<\varepsilon .
+	\]
+	Refining the partition if necessary, we may assume that its mesh satisfies
+	\[
+		x_{k+1}-x_k<\delta .
+	\]
+	Now remove the endpoints $x_0=s$ and $x_n=t$ and denote
+	\[
+		y_0=x_1,\quad y_1=x_2,\quad \dots,\quad y_{n-2}=x_{n-1}.
+	\]
+	Then $(y_i)$ is a partition of $[y_0,y_{n-2}] \subset (s,t)$.
+	Using the triangle inequality and the choice of $\delta$, we obtain
+	\[
+		\sum_{k=0}^{n-1}|a(x_{k+1})-a(x_k)|
+		\le
+		2\varepsilon + \sum_{k=0}^{n-3}|a(y_{k+1})-a(y_k)|.
+	\]
+	By the result of Point (2),
+	\[
+		\sum_{k=0}^{n-3}|a(y_{k+1})-a(y_k)|
+		\le V(y_{n-2})-V(y_0).
+	\]
+	Since $y_0>s$ and $y_{n-2}<t$, we have
+	\[
+		V(y_{n-2})-V(y_0)\le V(t^-)-V(s^+).
+	\]
+	Therefore,
+	\[
+		\sum_{k=0}^{n-1}|a(x_{k+1})-a(x_k)|
+		\le
+		2\varepsilon + V(t^-)-V(s^+).
+	\]
+	Taking the supremum over all partitions $(x_i)$ of $[s,t]$ yields
+	\[
+		V(t)-V(s)\le 2\varepsilon + V(t^-)-V(s^+).
+	\]
+	Since $\varepsilon>0$ is arbitrary, we conclude that
+	\[
+		V(t)-V(s)\le V(t^-)-V(s^+).
+	\]
+	Combining this inequality with the reverse inequality obtained earlier gives
+	\[
+		V(t)-V(s)=V(t^-)-V(s^+).
+	\]
+	Hence $V$ is continuous on $[0,T]$.
+
+\end{proof}
+
+\rem
+\label{rem:cont}
+One can notice in the proof related to the continuity of the function $V$, that
+$a$ is continuous to the right (to the left) implies that $V$ is continuous to the right (to the left).
+
+\lem[Jordan decomposition]
+\label{lem:jordan-cont}
+Let $a:[0,T]\to\R$ be a continuous function of bounded variation with $a(0)=0$.
+Then there exist two continuous non-decreasing functions $N,D:[0,T]\to\R$
+such that
+\[
+	a(t)=N(t)-D(t), \qquad t\in[0,T],
+\]
+and
+\[
+	N(0)=D(0)=0.
+\]
+
+\begin{proof}
+	Let $t \in [0,T]$. We define
+	\[
+		N(t) = \frac{V(t) + a(t)}{2}, \quad D(t) = \frac{V(t) - a(t)}{2}.
+	\]
+	Based on the definition of $V$, it is clear that $N,D$ are non-decreasing and non-negative.
+	In addition, because $V$ and $a$ are continuous, $D$ and $N$ are also continuous. Finally,
+	\[
+		a(t)=N(t)-D(t)
+	\]
+	and
+	\[
+		N(0)=D(0)=0.
+	\]
+\end{proof}
+
+\rem One can also notice that $V = N + D$.
+
+\begin{proof}[Proof of Theorem \ref{thm:bound-stiel}]
+	We want to prove that there exists a signed measure $\mu$ on $[0,T]$ such that $a(t) = \mu\left([0,t]\right)$.
+	Based on the Jordan decomposition (Lemma \ref{lem:jordan-cont}), we have the following formula :
+	\[
+		a(t)=N(t)-D(t), \qquad t\in[0,T],
+	\]
+	with $N$ and $D$ continuous, non-decreasing, non-negative and that starts from $0$.
+	Based on Section \ref{sec:stieljes} which deals with Stieljes integrals, there exists $\mu_1$ and $\mu_2$
+	two positive measures on $[0,T]$ such that for every $t\in [0,T]$,
+	\[
+		N(t) = \mu_1([0,t]), \quad
+		D(t) = \mu_2([0,t]).
+	\]
+	Finally, defining $\mu = \mu_1 - \mu_2$, a signed measure on $[0,T]$, we have
+	\[
+		a(t)=\mu([0,t]), \qquad t\in[0,T].
+	\]
+\end{proof}
+
+\rem In fact, only right–continuity is required to represent $N$ and $D$ as cumulative
+functions of positive measures. As noted in Remark \ref{rem:cont}, the total variation
+function $V$ is right–continuous whenever $a$ is right–continuous. Consequently, the
+Jordan decomposition still provides two non–decreasing right–continuous functions
+$N$ and $D$, which can be represented as Stieltjes measures.
+
+Therefore, the assumption that $a$ is continuous can be relaxed: it suffices to assume
+that $a$ is right–continuous and of bounded variation. In this case $a$ admits a
+representation as a Stieltjes integral, and in particular $a$ is a càdlàg function.
+
+\end{document}
