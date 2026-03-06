@@ -10,3 +10,7 @@ The project follows two main objectives:
 
 - Present mathematical concepts with a clear and coherent flow.
 - Provide detailed proofs for results that are often left as _“exercises for the reader.”_
+
+# Any mistakes ?
+
+Do not hesitate to contact me !
