@@ -1,0 +1,352 @@
+\documentclass[11pt]{article}
+
+\usepackage{amssymb,amscd,amsthm, verbatim,amsmath,color,fancyhdr, mathrsfs}
+\usepackage{graphicx}
+\usepackage{turnstile}
+\usepackage[hidelinks]{hyperref}
+
+\def\tequiv{\ensuremath\sdststile{}{}}
+
+\usepackage[letterpaper, left=2cm, right=2cm, top=2.5cm,
+bottom=2.5cm,dvips]{geometry}
+
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{exr}[thm]{Exercise}
+\newtheorem{ex}[thm]{Example}
+\newtheorem{defn}[thm]{Definition}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\V}{\mathbb{V}}
+
+\newcommand{\aN}{\mathcal{N}}
+\newcommand{\aB}{\mathcal{B}}
+\newcommand{\aM}{\mathcal{M}}
+
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\corr}{corr}
+
+\title{Vecteurs Gaussiens}
+
+\author{Victor Schmit}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Noyau de transition}
+
+\subsection{Généralités}
+
+\subsection{Cas des vecteurs gaussiens}
+
+Soient $X$ et $Z$ deux vecteurs aléatoires gaussiens, à valeurs respectivement dans $\R^n$ et $\R^m$.
+L'objectif est de donner un sens à la loi conditionnelle $Z \mid X=x$ pour $x \in \R^n$.
+
+\medskip
+
+On suppose, pour simplifier, que le vecteur $(X,Z)$ est centré et admet une matrice de covariance inversible
+\[
+	\Sigma_{(X,Z)} =
+	\begin{pmatrix}
+		\Sigma_X    & \Sigma_{XZ} \\
+		\Sigma_{ZX} & \Sigma_Z
+	\end{pmatrix}.
+\]
+Comme $\Sigma_{(X,Z)}$ est définie positive, les matrices $\Sigma_X$ et $\Sigma_Z$ sont elles aussi définies positives, donc inversibles. En effet, si $\Sigma_X$ n'était pas inversible, il existerait $u \in \R^n \setminus \{0\}$ tel que
+\[
+	u^\top \Sigma_X u = 0.
+\]
+En posant
+\[
+	y = \binom{u}{0} \in \R^{n+m},
+\]
+on obtiendrait
+\[
+	y^\top \Sigma_{(X,Z)} y = u^\top \Sigma_X u = 0,
+\]
+ce qui contredit la définie-positivité de $\Sigma_{(X,Z)}$.
+
+\medskip
+
+Les vecteurs $X$ et $Z$ admettent donc des densités données par
+\[
+	f_X(x)
+	=
+	\frac{1}{(2\pi)^{n/2}\det(\Sigma_X)^{1/2}}
+	\exp\left(-\frac12 x^\top \Sigma_X^{-1} x\right),
+\]
+et
+\[
+	f_Z(z)
+	=
+	\frac{1}{(2\pi)^{m/2}\det(\Sigma_Z)^{1/2}}
+	\exp\left(-\frac12 z^\top \Sigma_Z^{-1} z\right).
+\]
+
+On définit alors la densité conditionnelle de $Z$ sachant $X=x$ par
+\[
+	f_{Z\mid X=x}(z) = \frac{f_{(X,Z)}(x,z)}{f_X(x)}.
+\]
+On peut donc définir le noyau de transition $Q : \mathcal B(\R^m)\times \R^n \to \R_+$ par
+\[
+	Q(A,x)=\int_A f_{Z\mid X=x}(z)\,dz.
+\]
+Alors
+\[
+	\mathbb P(Z\in A\mid X)=Q(A,X).
+\]
+
+\begin{thm}
+	Pour tout $x\in\R^n$, la loi conditionnelle $Z\mid X=x$ est gaussienne, de la forme
+	\[
+		Z\mid X=x \sim \mathcal N(\mu(x),\Sigma_c),
+	\]
+	avec
+	\[
+		\mu(x)=\Sigma_{ZX}\Sigma_X^{-1}x,
+		\qquad
+		\Sigma_c=\Sigma_Z-\Sigma_{ZX}\Sigma_X^{-1}\Sigma_{XZ}.
+	\]
+\end{thm}
+
+\begin{proof}
+	Comme $(X,Z)$ est un vecteur gaussien, il existe une matrice $A\in \mathcal M_{m,n}(\R)$ telle que
+	\[
+		Z=AX+\varepsilon,
+	\]
+	où $\varepsilon$ est un vecteur gaussien indépendant de $X$.
+
+	En prenant la covariance avec $X$, on obtient
+	\[
+		\Sigma_{ZX}=\cov(Z,X)=A\Sigma_X,
+	\]
+	d'où
+	\[
+		A=\Sigma_{ZX}\Sigma_X^{-1}.
+	\]
+
+	Par conséquent,
+	\[
+		Z=\Sigma_{ZX}\Sigma_X^{-1}X+\varepsilon.
+	\]
+	Conditionnellement à $X=x$, on a donc
+	\[
+		Z\mid X=x = \Sigma_{ZX}\Sigma_X^{-1}x+\varepsilon.
+	\]
+	Comme $\varepsilon$ est gaussien indépendant de $X$, la loi conditionnelle de $Z\mid X=x$ est gaussienne, de moyenne
+	\[
+		\mu(x)=\Sigma_{ZX}\Sigma_X^{-1}x
+	\]
+	et de matrice de covariance
+	\[
+		\Sigma_c=\cov(\varepsilon).
+	\]
+
+	Il reste à calculer $\Sigma_c$. Comme
+	\[
+		\varepsilon = Z-AX,
+	\]
+	on a
+	\[
+		\Sigma_c
+		=
+		\cov(Z-AX)
+		=
+		\Sigma_Z-A\Sigma_{XZ}-\Sigma_{ZX}A^\top + A\Sigma_XA^\top.
+	\]
+	En remplaçant $A$ par $\Sigma_{ZX}\Sigma_X^{-1}$, on obtient
+	\[
+		\Sigma_c
+		=
+		\Sigma_Z-\Sigma_{ZX}\Sigma_X^{-1}\Sigma_{XZ}.
+	\]
+	Cela conclut la preuve.
+\end{proof}
+
+\begin{rem}
+	La matrice de covariance conditionnelle $\Sigma_c$ ne dépend pas de $x$. Dans le cadre gaussien, tous les points $x$ apportent donc la même quantité d'information sur la dispersion résiduelle de $Z$.
+\end{rem}
+
+\begin{rem}
+	La formule
+	\[
+		\Sigma_c=\Sigma_Z-\Sigma_{ZX}\Sigma_X^{-1}\Sigma_{XZ}
+	\]
+	montre que l'information apportée par l'observation de $X$ réduit la variance : la covariance conditionnelle est plus petite que la covariance initiale au sens de l'ordre de Loewner.
+\end{rem}
+
+\subsection{Graphical Lasso}
+
+On s'intéresse au problème suivant : on observe $n$ sources
+$(X_p)_{1 \leq p \leq n}$ qui émettent simultanément.
+La question est de savoir comment mesurer les dépendances entre ces différentes variables aléatoires.
+
+Pour cela, on adopte un modèle gaussien et on suppose que
+\[
+	X=(X_1,\dots,X_n)^\top \sim \mathcal N(0,\Sigma),
+\]
+où $\Sigma$ désigne la matrice de covariance. On note
+\[
+	\Theta = \Sigma^{-1}
+\]
+la matrice de précision.
+
+L'objectif est de quantifier la dépendance résiduelle entre deux variables $X_j$ et $X_k$ lorsque toutes les autres variables sont observées.
+
+\medskip
+
+Pour cela, on note
+\[
+	X_{-(jk)}=(X_p)_{p\neq j,k}.
+\]
+On considère les résidus obtenus après régression de $X_j$ et $X_k$ sur les autres variables :
+\[
+	R_j = X_j - \E(X_j\mid X_{-(jk)}),
+	\qquad
+	R_k = X_k - \E(X_k\mid X_{-(jk)}).
+\]
+La \emph{corrélation partielle} entre $X_j$ et $X_k$ sachant les autres variables est alors définie par
+\[
+	\rho_{jk\mid -(jk)} = \corr(R_j,R_k).
+\]
+
+\begin{rem}
+	Cette définition mesure la dépendance entre les composantes de $X_j$ et $X_k$ qui ne sont pas expliquées par les autres variables.
+\end{rem}
+
+\begin{rem}
+	En général, la covariance conditionnelle
+	\[
+		\cov(X_j,X_k\mid X_{-(jk)})
+	\]
+	est une variable aléatoire. Dans le cadre gaussien, elle ne dépend pas de la valeur de $X_{-(jk)}$, ce qui permet de la relier à un coefficient réel de corrélation partielle.
+\end{rem}
+
+\begin{rem}
+	Si l'on écrit la régression linéaire
+	\[
+		X_j = \beta_k X_k + \sum_{r\neq j,k}\beta_r X_r + \varepsilon_j,
+	\]
+	alors le résidu $\varepsilon_j$ est orthogonal aux variables explicatives. Dans le cadre gaussien, il leur est même indépendant.
+\end{rem}
+
+\begin{prop}
+	Pour tout $j\neq k$, on a
+	\[
+		\rho_{jk\mid -(jk)}
+		=
+		-\frac{\Theta_{jk}}{\sqrt{\Theta_{jj}\Theta_{kk}}}.
+	\]
+	En particulier,
+	\[
+		\rho_{jk\mid -(jk)}=0
+		\quad \Longleftrightarrow \quad
+		\Theta_{jk}=0.
+	\]
+	Ainsi, dans le modèle gaussien, l'absence d'arête entre les sommets $j$ et $k$ dans le graphe de dépendance conditionnelle équivaut à une entrée nulle dans la matrice de précision.
+\end{prop}
+
+\begin{proof}
+	Fixons $j\neq k$ et posons
+	\[
+		A=\{j,k\}, \qquad B=\{1,\dots,n\}\setminus A.
+	\]
+	On partitionne la matrice de covariance sous la forme
+	\[
+		\Sigma =
+		\begin{pmatrix}
+			\Sigma_{AA} & \Sigma_{AB} \\
+			\Sigma_{BA} & \Sigma_{BB}
+		\end{pmatrix}.
+	\]
+	Dans le cas gaussien, la loi conditionnelle de $X_A=(X_j,X_k)^\top$ sachant $X_B$ est gaussienne de covariance
+	\[
+		\Sigma_{A\mid B}
+		=
+		\Sigma_{AA}-\Sigma_{AB}\Sigma_{BB}^{-1}\Sigma_{BA}.
+	\]
+	Par la formule du complément de Schur, on a aussi
+	\[
+		\Sigma_{A\mid B} = (\Theta_{AA})^{-1},
+	\]
+	où
+	\[
+		\Theta_{AA}=
+		\begin{pmatrix}
+			\Theta_{jj} & \Theta_{jk} \\
+			\Theta_{jk} & \Theta_{kk}
+		\end{pmatrix}.
+	\]
+	On en déduit
+	\[
+		(\Theta_{AA})^{-1}
+		=
+		\frac{1}{\Theta_{jj}\Theta_{kk}-\Theta_{jk}^2}
+		\begin{pmatrix}
+			\Theta_{kk}  & -\Theta_{jk} \\
+			-\Theta_{jk} & \Theta_{jj}
+		\end{pmatrix}.
+	\]
+	Ainsi,
+	\[
+		\cov(X_j,X_k\mid X_B)
+		=
+		-\frac{\Theta_{jk}}{\Theta_{jj}\Theta_{kk}-\Theta_{jk}^2},
+	\]
+	et
+	\[
+		\Var(X_j\mid X_B)
+		=
+		\frac{\Theta_{kk}}{\Theta_{jj}\Theta_{kk}-\Theta_{jk}^2},
+		\qquad
+		\Var(X_k\mid X_B)
+		=
+		\frac{\Theta_{jj}}{\Theta_{jj}\Theta_{kk}-\Theta_{jk}^2}.
+	\]
+	Par conséquent,
+	\[
+		\rho_{jk\mid -(jk)}
+		=
+		\frac{\cov(X_j,X_k\mid X_B)}
+		{\sqrt{\Var(X_j\mid X_B)\Var(X_k\mid X_B)}}
+		=
+		-\frac{\Theta_{jk}}{\sqrt{\Theta_{jj}\Theta_{kk}}}.
+	\]
+	Cela prouve la formule.
+\end{proof}
+
+Le \emph{Graphical Lasso} consiste alors à estimer une matrice de précision parcimonieuse en résolvant un problème de la forme
+\[
+	\widehat{\Theta}
+	=
+	\arg\min_{\Theta \succ 0}
+	\left(
+	-\log\det(\Theta)
+	+
+	\operatorname{tr}(\widehat{\Sigma}\Theta)
+	+
+	\lambda \sum_{j\neq k} |\Theta_{jk}|
+	\right),
+\]
+où $\widehat{\Sigma}$ est la covariance empirique et $\lambda>0$ est un paramètre de régularisation favorisant la parcimonie des coefficients hors diagonale.
+
+\begin{rem}
+	La pénalisation en norme $\ell^1$ sur les coefficients hors diagonale favorise l'apparition de zéros dans $\widehat{\Theta}$, et donc l'estimation d'un graphe de dépendance conditionnelle parcimonieux.
+\end{rem}
+
+
+
+\end{document}
