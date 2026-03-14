@@ -1,0 +1,341 @@
+\documentclass[11pt]{article}
+
+\usepackage{amssymb,amscd,amsthm, verbatim,amsmath,color,fancyhdr, mathrsfs}
+\usepackage{graphicx}
+\usepackage{turnstile}
+\usepackage[hidelinks]{hyperref}
+
+\def\tequiv{\ensuremath\sdststile{}{}}
+
+\usepackage[letterpaper, left=2cm, right=2cm, top=2.5cm,
+bottom=2.5cm,dvips]{geometry}
+
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{exr}[thm]{Exercise}
+\newtheorem{ex}[thm]{Example}
+\newtheorem{defn}[thm]{Definition}
+
+% \underset{x}{\operatorname{argmax}} 
+%
+% \DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+
+\newcommand{\aA}{\mathcal{A}}
+\newcommand{\aB}{\mathcal{B}}
+\newcommand{\aM}{\mathcal{M}}
+\newcommand{\aL}{\mathcal{L}}
+
+\title{Equations de Hamilton Jacobi}
+
+\author{Victor Schmit}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Transformée de Legendre}
+
+\defn[Transformée de Legendre]
+Soit $f : \R^d  \to \R$ une fonction convexe, superlinéaire. On définit la transformée
+de Legendre $\aL$ de $f$ par
+\[
+	\aL(f) (x) = \max_{y \in \R^d} \langle x \cdot y\rangle - f(y).
+\]
+
+\rem Comme $\R^d$ est de dimension finie, on peut montrer que $f$ est continue.
+
+\rem On verra que la transformée de Legendre fait apparaître des notions de dualité :
+une notation utilisée pour la transformée de $f$ est $f^* = \aL(f)$.
+
+\rem La tansformée de Legendre est bien définie. En effet, par superlinéairité,
+\[
+	\lim_{\|y\| \to \infty} \frac{f(y)}{\|y\|} = + \infty.
+\]
+Donc, pour des raisons de continuité et de coercivité,
+\[
+	y \mapsto - \langle x \cdot y \rangle + f(y) \quad \text{admet un minimum.}
+\]
+La transformée de Legendre est donc bien définie.
+
+\prop Quelques propriétés sur la transformée de Legendre.
+\begin{enumerate}
+	\item $\aL(f)$ est convexe.
+
+	\item $\aL(f)$ est superlinéaire.
+
+	\item $\aL$ est une involution.
+\end{enumerate}
+
+\begin{proof}
+	Soit $f : \R^d \to \R$ une fonction convexe superlinaire.
+
+	\medskip
+
+	\emph{(1)} Montrons que $f^*$ est convexe. Soit $x,y,u \in \R^d$ et $\lambda  \in [0,1]$ et $z  = x + \lambda \cdot (y-x)$.
+	Alors,
+	\[
+		f^*(z) \le \langle u \cdot z\rangle - f(u) = (1-\lambda) \cdot (\langle u \cdot x \rangle - f(u)) +
+		\lambda \cdot (\langle u \cdot y \rangle - f(u)).
+	\]
+	Il est donc clair que
+	\[
+		f^*(z) \le (1-\lambda) \cdot f^*(x) + \lambda \cdot f^*(y).
+	\]
+	On en déduit que $f^*$ est convexe.
+
+	\medskip
+
+	\emph{(2)} Montrons que $f^*$ est superlinéaire. Soit $x \in \R^d$ et $A > 0$. On pose
+	$y = A \cdot \frac{x}{\|x\|}$. Dans ce cas, on a
+	\[
+		f^*(x) \ge A \|x\| - f(A \cdot \frac{x}{\|x\|}).
+	\]
+	Donc par continuité de $f$ et compacité des boules fermés,
+	\[
+		\frac{f^*(x)}{\|x\|} \ge A  - \frac{1}{\|x\|}\max_{u\in B(0,A)}f(u).
+	\]
+	On en déduit que
+	\[
+		\liminf_{\|x\| \to +\infty} \frac{f^*(x)}{\|x\|} \ge A.
+	\]
+	D'où, en faisant tendre $A$ vers l'infini,
+	\[
+		\liminf_{\|x\| \to +\infty} \frac{f^*(x)}{\|x\|} \ge +\infty.
+	\]
+	On en déduit que la limite en l'infini existe et que
+	\[
+		\lim_{\|x\| \to +\infty} \frac{f^*(x)}{\|x\|} = +\infty.
+	\]
+	On en conclut que $f^*$ est superlinéire.
+
+	\medskip
+
+	\emph{(3)} Montrons que $\aL$ est une involution. On vient de montrer que $\aL$ envoie son espace de définition
+	dans son espace de définiton. Il est donc tout à fait naturel de composer successivement une telle transformée. On montre ce résultat par double inégalités.
+
+	\emph{Etape 1 :} Montrons que $\aL^2 f \le f$. Soit $x \in \R^d$. On fixe $y$ tel que
+	$\aL^2f(x) = \langle x \cdot y \rangle -\aL f (y)$. Dans ce cas, on prend un $z \in \R^d$ libre. On a
+	\[
+		\aL^2 f (x) = \langle x \cdot y \rangle -\aL f (y) \le \langle x - z \cdot y \rangle  +  f (z)
+	\]
+	En prenant $z = x$, on a bien $\aL^2 f (x) \le f(x)$.
+
+	\medskip
+
+	\emph{Etape 2 :} Montrons que $\aL^2 f \ge f$. Soit $x \in \R^d$. Cette fois, on laisse $y \in \R^d$ libre. On a
+	\[
+		\aL^2 f (x) \ge \langle x \cdot y \rangle -\aL f (y).
+	\]
+	On peut donc choisir $z \in \R^d$ de telle sorte que
+	\[
+		\aL f (y) = \langle z \cdot y \rangle - f (z).
+	\]
+	On en déduit que
+	\[
+		\aL^2 f (x) \ge \langle x-z \cdot y \rangle + f (z).
+	\]
+	Pour la suite, il faut choisir $y$ soigneusement. Comme $f$ est convexe, il existe $y \in \R^d$ tel que pour tout $u \in \R^d$ on aie
+	\[
+		\langle u-x \cdot y \rangle \le f(u) - f(x)
+	\]
+	Dans ce cas, il est clair que $\aL f (y) = \langle x \cdot y \rangle - f(x)$. Donc, en posant $z = x$ on a
+	\[
+		\aL^2 f (x) \ge f(x).
+	\]
+	Cela permet de conclure.
+\end{proof}
+
+\rem Cette transformation est très intéressante car elle permet de faire le lien entre le Lagrangien et le Hamiltonien.
+Pour cela, il suffit de définir $L$ comme la transformée de Legendre de du hamiltonien $H$.
+
+\ex Si on prend  $f(x) = \frac{\|x\|^2}{2}$, alors $f^* = f$
+\ex Si $f$ est différentiable et que $f^*(z) = \langle z \cdot x \rangle - f(z)$, alors
+$df(z) = x$.
+
+\section{Formule de Hopf Lax}
+
+On propose de résoudre l'équation
+\begin{equation}
+	\begin{cases}
+		\partial_t u + H(\nabla_x u) = 0, \\
+		u(0,x) = u_0(x)
+	\end{cases}
+	\label{eq:ham}
+\end{equation}
+avec $H$ convexe, superlinéaire et u globalement lipschitzienne.
+
+\medskip
+
+On note $L$ la transformée de Legendre du Hamiltonien $H$ que l'on nommera le Lagrangien. On revient à la formulation variationnelle :
+
+\begin{equation}
+	u(t,x) = \inf_{\substack{\omega \in \mathcal{A}_{t,x,y} \\
+			y \in \mathbb{R}^d}}
+	\left(
+	\int_{0}^t L(\dot{\omega}(s))\, ds + u_0(y)
+	\right)
+	\label{eq:lag}
+\end{equation}
+Si $u$ est une solution de l'équation eq.~\ref{eq:lag}, alors $u$ est une solution de l'équation eq.~\ref{eq:ham}.
+
+\thm[Formule de Hopf Lax] Si on suppose que $L$ est convexe et superlinéaire et que $u_0$ et globalement lipschitzienne, alors si $u$ satisfait l'équation eq.\ref{eq:lag}, on a pour tout $t > 0$ et $x \in \R^d$
+
+\begin{equation}
+	u(t,x) = \min_{y \in \R^d} t\cdot L\left(\frac{x-y}{t}\right) + u_0(y)
+	\label{eq:hopf}
+\end{equation}
+
+\begin{proof}
+	Soit $x,y \in \R^d$
+
+	\medskip
+
+	\emph{Étape 1 : } Montrons que le minimum existe. Pour cela on pose
+
+	\[
+		h(y) = t \cdot L \left(\frac{x-y}{t}\right) + u_0(y)
+	\]
+
+	Il est clair que $h$ est continue. Il reste donc à montrer que $h$ est coercive pour prouver l'existence d'un minimum. Or, si on note $C$ la cosntante de lipschitz de $u_0$, on a
+	\[
+		h(y) \ge \|y\| \cdot \left (
+		\frac{t}{\|y\|} \cdot L\left(\frac{x-y}{t}\right) -  C
+		\right).
+	\]
+	Or, comme  $\|y\| \sim_{y \to +\infty} \frac{\|x-y\|}{t}$ et comme $L$ est superlinéaire d'après les propriétés de la transformée de Legendre, il devient clair que
+	\[
+		\frac{h(y)}{\|y\|} \xrightarrow[y \to +\infty]{} +\infty.
+	\]
+	Donc, $h$ est superlinéaire et en particulier est coercive.
+
+	\medskip
+
+	\emph{Étape 2 : } Soit $\omega \in \aA_{t,x,y}$ un chemin de classe $C^1$ reliant $y$ et $x$ sur $[0,t]$. D'après les propriétés de la transformée de Legendre,
+	le Lagrangienn $L$ est convexe. On peut donc utiliser l'inégalité de Jensen pour les fonctions convexes. On a
+	\[
+		\displaystyle\int_{[0,t]}^{} L(\dot{\omega}(s)) ds \ge
+		t \cdot L\left(\frac{1}{t}\displaystyle\int_{[0,t]}^{}   \dot{\omega}(s) ds\right)
+		= t \cdot L\left(\frac{x-y}{t}\right)
+	\]
+	Donc,
+	\[
+		\displaystyle\int_{[0,t]}^{} L(\dot{\omega}(s)) ds + u_0(y) \ge
+		t \cdot L\left(\frac{x-y}{t}\right) + u_0(y)
+	\]
+	En passant, aux bornes inférieures, on a donc
+	\[
+		u(t,x) \ge
+		\min_{y \in \R^d} \left( t \cdot L\left(\frac{x-y}{t}\right) + u_0(y) \right)
+	\]
+
+	\medskip
+
+	\emph{Étape 3 : } Pour montrer l'autre inégalité, on choisit $y$ qui minimise $h$. Dans ce cas, on pose l'impulsion $v = \frac{x-y}{t}$. Dans ce cas, on peut définir
+	$\omega : [0,t] \to \R^d$ par
+	\[
+		\omega(s) = s \cdot v + u_0(y).
+	\]
+	Il est clair que $\omega \in \aA_{t,x,y}$. De plus,
+	\[
+		\displaystyle\int_{[0,t]}^{} L(\dot{\omega}(s)) ds + u_0(y) =
+		\displaystyle\int_{[0,t]}^{} L(v) ds + u_0(y) =
+		t \cdot L\left(v\right) + u_0(y).
+	\]
+	Comme on a choisi $y \in \R^d$ pour minimiser $h$, on a donc
+	\[
+		\displaystyle\int_{[0,t]}^{} L(\dot{\omega}(s)) ds + u_0(y) =
+		\min_{y \in \R^d} \left( t \cdot L\left(\frac{x-y}{t}\right) + u_0(y) \right).
+	\]
+	On en conclut que
+	\[
+		\min_{y \in \R^d} \left( t \cdot L\left(\frac{x-y}{t}\right) + u_0(y) \right)
+		\ge
+		u(t,x).
+	\]
+\end{proof}
+
+\prop On pose la fonction $u : \R^*_+ \times  \R^d \to \R$ définie par la fomule de Hopf eq.~\ref{eq:hopf}. Dans ce cas,
+\[
+	u(t,x) = \min_{z \in \R^d}\left(
+	(t-s) \cdot L \left(\frac{x-z}{t-s}\right) + u(s,z)
+	\right)
+\]
+De plus, $u$ est globalement lipschitzienne.
+
+\begin{proof}
+	Soit $t > s > 0$ et $x,y,z \in \R^d$.
+
+	\medskip
+
+	Avant de prouver un à un les différents points, on met en évidence une inégalité qui sera utile. On pose les vecteurs vitesse suivants :
+	\[
+		u = \frac{x-z}{t-s}, \quad v = \frac{z-y}{s}, \quad \omega = \frac{x-y}{t}.
+	\]
+	Dans ce cas, il est clair que
+	\[
+		x-y = (t-s) \cdot u + s \cdot v.
+	\]
+	Donc,
+	\[
+		\omega = \frac{t-s}{t} \cdot u + \frac{s}{t}\cdot v.
+	\]
+	On en déduit que
+
+	\[
+		t \cdot L(\omega) + u_0(y) \le
+		(t-s) \cdot L(u) + s \cdot L(v) + u_0(y).
+	\]
+
+	\medskip
+
+	\emph{Étape 1 : } On fixe $x \in \R^d$ et $t>s>0$.
+	Dans ce cas,
+	\[
+		u(t,x) \le t \cdot L(\omega) + u_0(y) \le
+		(t-s) \cdot L(u) + s \cdot L(v) + u_0(y).
+	\]
+	On peut donc ensuite chosir un $y \in \R^d$ tel que
+	\[
+		u(t,x) \le
+		(t-s) \cdot L(u) + u(s,z)
+	\]
+	Cela étant pour un $z \in \R^d$ quelconque, on a bien
+	\[
+		u(t,x) \le
+		\min_{z\in \R^d} \left((t-s) \cdot L\left(\frac{x-z}{t-s}\right) + u(s,z) \right)
+	\]
+
+	\medskip
+
+	\emph{Étape 2 : } Pour montrer l'autre inégalité, on remarque que l'on peut
+	choisir un $z \in \R^d$ tel que tous les vecteurs vitesse $v,u,\omega$ soient égaux.
+	Pour cela, on peut prendre $z = \frac{s}{t} x + \frac{t-s}{t} y$. On en déduit que,
+	\[
+		\min_{z\in \R^d} \left((t-s) \cdot L\left(\frac{x-z}{t-s}\right) + u(s,z) \right)\le
+		(t-s) \cdot L(u) + s \cdot L(v) + u_0(y)=
+		t \cdot L(\omega) + u_0(y).
+	\]
+	En prenant $y \in \R^d$ minimisant le côté droit, on a
+	\[
+		\min_{z\in \R^d} \left((t-s) \cdot L\left(\frac{x-z}{t-s}\right) + u(s,z) \right)\le
+		u(t,x).
+	\]
+
+	\emph{Étape 3 : } Montrons que $u$ est globalement lipschitzienne.
+
+
+\end{proof}
+
+\end{document}
