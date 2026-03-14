@@ -25,6 +25,7 @@ bottom=2.5cm,dvips]{geometry}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\V}{\mathbb{V}}
+\newcommand{\K}{\mathbb{K}}
 
 \newcommand{\aN}{\mathcal{N}}
 \newcommand{\aB}{\mathcal{B}}
@@ -188,8 +189,9 @@ Alors
 	montre que l'information apportée par l'observation de $X$ réduit la variance : la covariance conditionnelle est plus petite que la covariance initiale au sens de l'ordre de Loewner.
 \end{rem}
 
-\subsection{Graphical Lasso}
+\section{Graphical Lasso}
 
+\subsection{Problème}
 On s'intéresse au problème suivant : on observe $n$ sources
 $(X_p)_{1 \leq p \leq n}$ qui émettent simultanément.
 La question est de savoir comment mesurer les dépendances entre ces différentes variables aléatoires.
@@ -243,6 +245,95 @@ La \emph{corrélation partielle} entre $X_j$ et $X_k$ sachant les autres variabl
 	alors le résidu $\varepsilon_j$ est orthogonal aux variables explicatives. Dans le cadre gaussien, il leur est même indépendant.
 \end{rem}
 
+\subsection{Complément de Schur}
+
+Pour poursuivre l'étude sur la corrélation, on va avoir besoin de quelques résultats pour inverser les matrices par blocs.
+
+\begin{defn}[Complément de Schur]
+	Soit $M \in \aM_{n+m}(\R)$ une matrice. Alors on peut écrire
+	\[
+		M =
+		\begin{pmatrix}
+			A & B \\
+			C & D \\
+		\end{pmatrix}.
+	\]
+	Si $D$ est inversible on note $S = A - BD^{-1}C$, le complément de Schur.
+\end{defn}
+
+\begin{rem}
+	Le complément de Schur peut s'apparenter à une élimination de Gauss pour une matrice de taille $2 \times 2$.
+	En effet, on veut résoudre le système
+	\[
+		M
+		\begin{pmatrix}
+			x \\
+			y
+		\end{pmatrix}
+		=
+		\begin{pmatrix}
+			u \\
+			v
+		\end{pmatrix}.
+	\]
+	Donc,
+	\begin{align}
+		A x + B y & = u \\
+		C x + D y & = v
+	\end{align}
+	Si $(1) \to (1) - BD^{-1} (2)$, on a alors
+	\begin{align}
+		(A - B D^{-1} C) x & = u - B D^{-1}v \\
+		C x + D y          & = v
+	\end{align}
+	D'un point de vue matricielle, cela veut dire que
+	\[
+		\begin{pmatrix}
+			A & B \\
+			C & D
+		\end{pmatrix}
+		\begin{pmatrix}
+			I_n      & 0   \\
+			-D^{-1}C & I_m
+		\end{pmatrix} =
+		\begin{pmatrix}
+			S & B \\
+			0 & D
+		\end{pmatrix}.
+	\]
+	On a donc le résultat suivant.
+\end{rem}
+
+\begin{prop}
+	La matrice $M$ est inversible si et seulement si $S$ et $D$ sont inversibles.
+	Dans ce cas
+	\[
+		M^{-1} =
+		\begin{pmatrix}
+			I_n       & 0   \\
+			-D^{-1} C & I_m
+		\end{pmatrix}
+		\begin{pmatrix}
+			S^{-1} & 0      \\
+			0      & D^{-1}
+		\end{pmatrix}
+		\begin{pmatrix}
+			I_n & -BD^{-1} \\
+			0   & I_m
+		\end{pmatrix}.
+	\]
+	Ou encore
+	\[
+		M^{-1} =
+		\begin{pmatrix}
+			S^{-1}           & -S^{-1}BD^{-1} \\
+			-D^{-1} C S^{-1} & D^{-1}
+		\end{pmatrix}.
+	\]
+\end{prop}
+
+\subsection{Algorithme}
+
 \begin{prop}
 	Pour tout $j\neq k$, on a
 	\[
@@ -258,6 +349,7 @@ La \emph{corrélation partielle} entre $X_j$ et $X_k$ sachant les autres variabl
 	\]
 	Ainsi, dans le modèle gaussien, l'absence d'arête entre les sommets $j$ et $k$ dans le graphe de dépendance conditionnelle équivaut à une entrée nulle dans la matrice de précision.
 \end{prop}
+
 
 \begin{proof}
 	Fixons $j\neq k$ et posons
